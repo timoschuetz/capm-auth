@@ -1,0 +1,20 @@
+{
+    "destinations" : [
+        {
+            "name": "srv_api",
+            "url": "https://bookshop-srv-responsible-emu.cfapps.eu10.hana.ondemand.com",
+            "forwardAuthToken": true
+        }
+    ],
+    "VCAP_SERVICES": {
+        "xsuaa": [
+            {
+                "name": "xsuaa", "label": "xsuaa", "tags": [ "xsuaa" ],
+                "credentials": {
+                    "apiurl": "https://api.authentication.eu10.hana.ondemand.com",
+                    ...
+                }
+            }
+        ]
+    }
+   }
