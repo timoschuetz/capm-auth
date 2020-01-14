@@ -1,0 +1,51 @@
+ID: hazelnut
+_schema-version: "2.1"
+version: 0.0.1
+modules:
+  - name: hazelnut
+    type: approuter.nodejs
+    path: app/
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: hazelnut-uaa
+      - name: srv_api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          name: srv_api
+          strictSSL: false
+          url: '~{url}'
+  - name: hazelnut-db
+    type: hdb
+    path: db/
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: hazelnut-db-hdi-container
+  - name: hazelnut-srv
+    type: nodejs
+    path: srv/
+    parameters:
+      memory: 512M
+      disk-quota: 256M
+    provides:
+      - name: srv_api
+        properties:
+          url: ${default-url}
+    requires:
+      - name: hazelnut-db-hdi-container
+      - name: hazelnut-uaa
+resources:
+  - name: hazelnut-db-hdi-container
+    type: com.sap.xs.hdi-container
+    properties:
+      hdi-container-name: ${service-name}
+  - name: hazelnut-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: application
+      service: xsuaa
+      path: ./xs-security.json
